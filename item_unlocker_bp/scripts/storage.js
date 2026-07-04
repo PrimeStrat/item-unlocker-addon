@@ -3,6 +3,8 @@ import { world } from "@minecraft/server";
 const SHARD_COUNT = 16;
 const PLAYER_SHARD_PREFIX = "iuc:pc";
 const GLOBAL_SHARD_PREFIX = "iuc:gc";
+const WORLD_EPOCH_PROP = "iuc:reset_epoch";
+const PLAYER_EPOCH_PROP = "iuc:player_epoch";
 
 /**
  * Computes a stable non-negative shard index for a collectible key.
@@ -113,4 +115,57 @@ export function addPlayerKey(player, key) {
  */
 export function addGlobalKey(key) {
     return addToShard(world, GLOBAL_SHARD_PREFIX, key);
+}
+
+/**
+ * Clears every shard on a holder for the given prefix.
+ * @param {import("@minecraft/server").World|import("@minecraft/server").Player} holder Property owner.
+ * @param {string} prefix Shard property prefix.
+ * @returns {void}
+ */
+function clearShards(holder, prefix) {
+    for (let i = 0; i < SHARD_COUNT; i++) {
+        holder.setDynamicProperty(prefix + i, undefined);
+    }
+}
+
+/**
+ * Reads the current world reset epoch.
+ * @returns {number} The world epoch (0 if never reset).
+ */
+function worldEpoch() {
+    const value = world.getDynamicProperty(WORLD_EPOCH_PROP);
+    return typeof value === "number" ? value : 0;
+}
+
+/**
+ * Resets all progress: the global shards, every online player's shards, and
+ * the world epoch. Bumping the epoch marks offline players stale so their
+ * data is wiped on their next spawn via reconcilePlayerEpoch.
+ * @returns {void}
+ */
+export function resetAllProgress() {
+    clearShards(world, GLOBAL_SHARD_PREFIX);
+    for (const player of world.getAllPlayers()) {
+        clearShards(player, PLAYER_SHARD_PREFIX);
+        player.setDynamicProperty(PLAYER_EPOCH_PROP, worldEpoch() + 1);
+    }
+    world.setDynamicProperty(WORLD_EPOCH_PROP, worldEpoch() + 1);
+}
+
+/**
+ * Wipes a player's shards if their stored epoch is behind the world epoch,
+ * catching players who were offline during a reset.
+ * @param {import("@minecraft/server").Player} player Player to reconcile.
+ * @returns {boolean} True if the player was reset by this call.
+ */
+export function reconcilePlayerEpoch(player) {
+    const current = worldEpoch();
+    const stored = player.getDynamicProperty(PLAYER_EPOCH_PROP);
+    if (stored === current) {
+        return false;
+    }
+    clearShards(player, PLAYER_SHARD_PREFIX);
+    player.setDynamicProperty(PLAYER_EPOCH_PROP, current);
+    return true;
 }

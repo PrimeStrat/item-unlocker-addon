@@ -1,8 +1,15 @@
-import { world, system, CommandPermissionLevel, CustomCommandStatus } from "@minecraft/server";
+import { world, system, CommandPermissionLevel, CustomCommandStatus, CustomCommandParamType } from "@minecraft/server";
 import { collectibleKey, displayName } from "./collectible.js";
-import { loadPlayerCollected, loadGlobalCollected, addPlayerKey, addGlobalKey } from "./storage.js";
+import {
+    loadPlayerCollected,
+    loadGlobalCollected,
+    addPlayerKey,
+    addGlobalKey,
+    resetAllProgress,
+    reconcilePlayerEpoch
+} from "./storage.js";
 import { getSettings } from "./settings.js";
-import { openSettingsForm, openCollectionForm, sendProgress } from "./ui.js";
+import { openSettingsForm, openCollectionForm, sendProgress, openResetForm } from "./ui.js";
 import { isCollectible, totalCollectibles } from "./registry.js";
 
 const UNLOCK_SOUND = "random.orb";
@@ -35,6 +42,19 @@ function getPlayerCache(player) {
 }
 
 /**
+ * Resets all stored progress and rebuilds the in-memory caches to match.
+ * @returns {void}
+ */
+function performReset() {
+    resetAllProgress();
+    globalCache = new Set();
+    playerCache.clear();
+    for (const player of world.getAllPlayers()) {
+        cachePlayer(player);
+    }
+}
+
+/**
  * Announces a newly unlocked collectible and plays its sound for a player.
  * @param {import("@minecraft/server").Player} player Player who unlocked the item.
  * @param {string} key Collectible key that was unlocked.
@@ -47,7 +67,7 @@ function announceUnlock(player, key, playerCount) {
     const have = settings.globalCounter ? globalCache.size : playerCount;
     if (!settings.disableMessage) {
         world.sendMessage(
-            "§8§l[§bItem Unlocker§8]§r §b" + player.name + "§r unlocked §a" + name +
+            "§b" + player.name + "§r unlocked §a" + name +
             "§r! §7(" + have + "/" + total + ")§r"
         );
     }
@@ -91,6 +111,7 @@ function recordAcquisition(player, itemStack) {
  */
 function registerCommands(event) {
     const registry = event.customCommandRegistry;
+    registry.registerEnum("iuc:filter", ["all", "collected", "missing"]);
     registry.registerCommand(
         {
             name: "iuc:settings",
@@ -124,15 +145,34 @@ function registerCommands(event) {
     registry.registerCommand(
         {
             name: "iuc:collection",
-            description: "Browse every collected and uncollected item.",
-            permissionLevel: CommandPermissionLevel.Any
+            description: "Browse collected and uncollected items.",
+            permissionLevel: CommandPermissionLevel.Any,
+            optionalParameters: [
+                { name: "iuc:filter", type: CustomCommandParamType.Enum }
+            ]
+        },
+        (origin, filter) => {
+            const player = origin.sourceEntity;
+            if (!player || player.typeId !== "minecraft:player") {
+                return { status: CustomCommandStatus.Failure, message: "Run this as a player." };
+            }
+            const mode = filter || "all";
+            system.run(() => openCollectionForm(player, 0, mode));
+            return { status: CustomCommandStatus.Success };
+        }
+    );
+    registry.registerCommand(
+        {
+            name: "iuc:reset",
+            description: "Reset all Item Unlocker Challenge progress.",
+            permissionLevel: CommandPermissionLevel.Admin
         },
         (origin) => {
             const player = origin.sourceEntity;
             if (!player || player.typeId !== "minecraft:player") {
                 return { status: CustomCommandStatus.Failure, message: "Run this as a player." };
             }
-            system.run(() => openCollectionForm(player, 0));
+            system.run(() => openResetForm(player, performReset));
             return { status: CustomCommandStatus.Success };
         }
     );
@@ -145,19 +185,23 @@ world.afterEvents.worldLoad.subscribe(() => {
     for (const player of world.getAllPlayers()) {
         cachePlayer(player);
     }
-    world.afterEvents.playerSpawn.subscribe((event) => {
-        if (event.initialSpawn) {
-            cachePlayer(event.player);
-        }
-    });
-    world.afterEvents.playerLeave.subscribe((event) => {
-        playerCache.delete(event.playerId);
-    });
-    world.afterEvents.playerInventoryItemChange.subscribe((event) => {
-        const itemStack = event.itemStack;
-        if (!itemStack) {
-            return;
-        }
-        recordAcquisition(event.player, itemStack);
-    });
+});
+
+world.afterEvents.playerSpawn.subscribe((event) => {
+    if (event.initialSpawn) {
+        reconcilePlayerEpoch(event.player);
+        cachePlayer(event.player);
+    }
+});
+
+world.afterEvents.playerLeave.subscribe((event) => {
+    playerCache.delete(event.playerId);
+});
+
+world.afterEvents.playerInventoryItemChange.subscribe((event) => {
+    const itemStack = event.itemStack;
+    if (!itemStack) {
+        return;
+    }
+    recordAcquisition(event.player, itemStack);
 });

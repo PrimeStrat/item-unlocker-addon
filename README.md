@@ -18,10 +18,15 @@ Both must be applied to a world together (they depend on each other).
 
 All commands are usable by any player.
 
-- `/iuc:progress` - prints your collection progress (e.g. `5 / 1363`).
-- `/iuc:collection` - opens a paged form listing every collected `[X]` and
-  uncollected `[ ]` item as body text.
+- `/iuc:progress` - prints your collection progress (global total when the
+  Global Counter is on).
+- `/iuc:collection [filter]` - opens a paged form listing collected `[X]` and
+  uncollected `[ ]` items as body text. The optional `filter` is `all` (default),
+  `collected` (only what you have), or `missing` (only what you still need).
 - `/iuc:settings` - opens the settings form with three toggles.
+- `/iuc:reset` - operators only; opens a warning form and, if confirmed, wipes
+  ALL progress for every player and the global collection (offline players are
+  reset on their next join).
 
 ## Settings
 
@@ -42,20 +47,26 @@ Collection is keyed by item type id, so item meta is ignored:
 - Buckets of a mob (axolotl, tropical fish, etc.) count as their single item id.
 - Damaged and chipped anvils collapse onto the base anvil.
 
-Colored variants that are distinct item ids DO count separately (wool, concrete,
-shulker boxes, bundles, glazed terracotta, candles, carpets, harnesses, etc.).
-Beds and banners are a single item id in Bedrock (color is item meta), so each
-is one entry.
+Colored variants count separately. Most (wool, concrete, shulker boxes, bundles,
+glazed terracotta, candles, carpets, harnesses, etc.) are already distinct item
+ids. Beds and banners share one item id per color in Bedrock, so their color is
+read from the item's localization key and each of the 16 colors counts as its
+own entry.
 
-Potions are the one meta-based exception: they are keyed by their base effect
-type via the potion component, ignoring delivery (splash/lingering) and
-modifier (amplifier/duration). Speed I, Speed II, and extended Speed are one
-entry; each distinct effect (Strength, Night Vision, etc.) is its own entry.
+Potions are a meta-based exception: they are keyed by their base effect type via
+the potion component, ignoring delivery (splash/lingering) and modifier
+(amplifier/duration). Speed I, Speed II, and extended Speed are one entry; each
+distinct effect (Strength, Night Vision, etc.) is its own entry.
+
+Tipped arrows work the same way: all share the minecraft:arrow id, so their
+effect is read from the localization key and each effect (Arrow of Swiftness,
+Arrow of Poison, etc.) counts once regardless of amplifier or duration. A plain
+arrow is its own single entry.
 
 ## The fixed master list
 
 `item_unlocker_bp/scripts/collectibles.js` holds the fixed set of collectible
-keys (the denominator, currently 1363). It is generated from the source item
+keys (the denominator, currently 1457). It is generated from the source item
 list; Java-exclusive and unobtainable entries are dropped. To regenerate it:
 
 ```
