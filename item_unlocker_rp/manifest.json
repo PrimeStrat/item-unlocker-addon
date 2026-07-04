@@ -1,24 +1,45 @@
 {
-  "format_version": 2,
-  "header": {
-    "name": "pack.name",
-    "description": "pack.description",
-    "uuid": "08cf7ec7-8d80-4d65-aab2-cd433398f732",
-    "version": [1, 0, 0],
-    "min_engine_version": [1, 21, 120]
-  },
-  "modules": [
-    {
-      "type": "resources",
-      "uuid": "9ec85feb-5232-4299-90a2-a3acdc4e3310",
-      "version": [1, 0, 0]
+    "format_version": 2,
+    "header": {
+        "name": "pack.name",
+        "description": "pack.description",
+        "uuid": "08cf7ec7-8d80-4d65-aab2-cd433398f732",
+        "version": [
+            1,
+            0,
+            0
+        ],
+        "min_engine_version": [
+            1,
+            21,
+            120
+        ]
+    },
+    "modules": [
+        {
+            "type": "resources",
+            "uuid": "9ec85feb-5232-4299-90a2-a3acdc4e3310",
+            "version": [
+                1,
+                0,
+                0
+            ]
+        }
+    ],
+    "dependencies": [
+        {
+            "uuid": "5746252f-88b2-4df4-bf90-b3f12bd84e35",
+            "version": [
+                1,
+                0,
+                0
+            ]
+        }
+    ],
+    "metadata": {
+        "authors": [
+            "PrimeStrat"
+        ],
+        "product_type": "addon"
     }
-  ],
-  "dependencies": [
-    { "uuid": "5746252f-88b2-4df4-bf90-b3f12bd84e35", "version": [1, 0, 0] }
-  ],
-  "metadata": {
-    "authors": ["PrimeStrat"],
-    "product_type": "addon"
-  }
 }
