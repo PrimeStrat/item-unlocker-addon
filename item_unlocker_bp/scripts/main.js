@@ -116,7 +116,8 @@ function registerCommands(event) {
         {
             name: "iuc:settings",
             description: "Open the Item Unlocker Challenge settings.",
-            permissionLevel: CommandPermissionLevel.Any
+            permissionLevel: CommandPermissionLevel.Any,
+            cheatsRequired: false
         },
         (origin) => {
             const player = origin.sourceEntity;
@@ -131,7 +132,8 @@ function registerCommands(event) {
         {
             name: "iuc:progress",
             description: "Show your Item Unlocker Challenge progress.",
-            permissionLevel: CommandPermissionLevel.Any
+            permissionLevel: CommandPermissionLevel.Any,
+            cheatsRequired: false
         },
         (origin) => {
             const player = origin.sourceEntity;
@@ -147,6 +149,7 @@ function registerCommands(event) {
             name: "iuc:collection",
             description: "Browse collected and uncollected items.",
             permissionLevel: CommandPermissionLevel.Any,
+            cheatsRequired: false,
             optionalParameters: [
                 { name: "iuc:filter", type: CustomCommandParamType.Enum }
             ]
@@ -165,7 +168,8 @@ function registerCommands(event) {
         {
             name: "iuc:reset",
             description: "Reset all Item Unlocker Challenge progress.",
-            permissionLevel: CommandPermissionLevel.Admin
+            permissionLevel: CommandPermissionLevel.Any,
+            cheatsRequired: false
         },
         (origin) => {
             const player = origin.sourceEntity;
