@@ -282,7 +282,6 @@ export const COLLECTIBLE_KEYS = [
     "minecraft:chiseled_tuff_bricks",
     "minecraft:chorus_flower",
     "minecraft:chorus_fruit",
-    "minecraft:chorus_plant",
     "minecraft:cinnabar",
     "minecraft:cinnabar_brick_slab",
     "minecraft:cinnabar_brick_stairs",
@@ -591,7 +590,6 @@ export const COLLECTIBLE_KEYS = [
     "minecraft:granite_stairs",
     "minecraft:granite_wall",
     "minecraft:grass_block",
-    "minecraft:grass_path",
     "minecraft:gravel",
     "minecraft:gray_bundle",
     "minecraft:gray_candle",
@@ -942,7 +940,6 @@ export const COLLECTIBLE_KEYS = [
     "minecraft:paper",
     "minecraft:pearlescent_froglight",
     "minecraft:peony",
-    "minecraft:petrified_oak_slab",
     "minecraft:phantom_membrane",
     "minecraft:piglin_banner_pattern",
     "minecraft:piglin_head",
@@ -1260,7 +1257,6 @@ export const COLLECTIBLE_KEYS = [
     "minecraft:trapdoor",
     "minecraft:trapped_chest",
     "minecraft:trial_key",
-    "minecraft:trial_spawner",
     "minecraft:trident",
     "minecraft:tripwire_hook",
     "minecraft:tropical_fish",
@@ -1281,7 +1277,6 @@ export const COLLECTIBLE_KEYS = [
     "minecraft:turtle_scute",
     "minecraft:twisting_vines",
     "minecraft:undyed_shulker_box",
-    "minecraft:vault",
     "minecraft:verdant_froglight",
     "minecraft:vex_armor_trim_smithing_template",
     "minecraft:vine",
@@ -1454,6 +1449,5 @@ export const COLLECTIBLE_KEYS = [
     "potion:water_breathing",
     "potion:weakness",
     "potion:weaving",
-    "potion:wind_charged",
-    "potion:wither"
+    "potion:wind_charged"
 ];
