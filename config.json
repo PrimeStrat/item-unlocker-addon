@@ -1,0 +1,30 @@
+{
+    "$schema": "https://raw.githubusercontent.com/Bedrock-OSS/regolith-schemas/main/config/v1.8.json",
+    "author": "PrimeStrat",
+    "name": "item_unlocker",
+    "packs": {
+        "behaviorPack": "./item_unlocker_bp",
+        "resourcePack": "./item_unlocker_rp"
+    },
+    "regolith": {
+        "formatVersion": "1.8.0",
+        "dataPath": "./data",
+        "filterDefinitions": {},
+        "profiles": {
+            "default": {
+                "export": {
+                    "target": "development",
+                    "build": "standard",
+                    "readOnly": false
+                },
+                "filters": []
+            },
+            "build": {
+                "export": {
+                    "target": "local"
+                },
+                "filters": []
+            }
+        }
+    }
+}
