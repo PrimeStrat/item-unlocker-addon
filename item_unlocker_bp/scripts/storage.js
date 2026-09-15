@@ -1,4 +1,5 @@
 import { world } from "@minecraft/server";
+import { isCollectible } from "./registry.js";
 
 const SHARD_COUNT = 16;
 const PLAYER_SHARD_PREFIX = "iuc:pc";
@@ -47,7 +48,7 @@ function writeShard(holder, prefix, index, keys) {
 }
 
 /**
- * Loads every collected key from all shards on a holder into one Set.
+ * Loads every still-valid collected key from all shards on a holder into one Set.
  * @param {import("@minecraft/server").World|import("@minecraft/server").Player} holder Property owner.
  * @param {string} prefix Shard property prefix.
  * @returns {Set<string>} All collected keys for that holder.
@@ -57,7 +58,9 @@ function loadAll(holder, prefix) {
     for (let i = 0; i < SHARD_COUNT; i++) {
         const keys = readShard(holder, prefix, i);
         for (const key of keys) {
-            all.add(key);
+            if (isCollectible(key)) {
+                all.add(key);
+            }
         }
     }
     return all;

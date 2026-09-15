@@ -33,7 +33,12 @@ const ARROW_NON_EFFECTS = new Set([
 const ID_ALIASES = {
     "minecraft:chipped_anvil": "minecraft:anvil",
     "minecraft:damaged_anvil": "minecraft:anvil",
+    "minecraft:light_gray_glazed_terracotta": "minecraft:silver_glazed_terracotta",
     "minecraft:netherite_upgrade": "minecraft:netherite_upgrade_smithing_template"
+};
+
+const NAME_OVERRIDES = {
+    "minecraft:silver_glazed_terracotta": "Light Gray Glazed Terracotta"
 };
 
 const COLORED_TYPES = new Set([
@@ -172,6 +177,9 @@ export function displayName(key) {
         const colon = base.indexOf(":");
         const path = colon === -1 ? base : base.slice(colon + 1);
         return prettifySegment(color) + " " + prettifySegment(path);
+    }
+    if (NAME_OVERRIDES[key]) {
+        return NAME_OVERRIDES[key];
     }
     const colon = key.indexOf(":");
     let path = colon === -1 ? key : key.slice(colon + 1);
