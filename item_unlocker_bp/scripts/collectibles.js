@@ -9,8 +9,6 @@ export const COLLECTIBLE_KEYS = [
     "arrow:infested",
     "arrow:invisibility",
     "arrow:leaping",
-    "arrow:levitation",
-    "arrow:luck",
     "arrow:night_vision",
     "arrow:oozing",
     "arrow:poison",
