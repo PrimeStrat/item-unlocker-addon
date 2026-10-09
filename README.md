@@ -5,14 +5,7 @@ unlocks, announces each new unlock, and shows collection progress against a
 fixed master list.
 
 - Author: PrimeStrat
-- Target: Bedrock 1.21.120+, `@minecraft/server` 2.8.0, `@minecraft/server-ui` 2.1.0
-
-## Packs
-
-- `item_unlocker_bp/` - behavior pack (scripts + data)
-- `item_unlocker_rp/` - resource pack (name/description text + icon)
-
-Both must be applied to a world together (they depend on each other).
+- Recommended Version: v1.26.50+
 
 ## Commands
 
@@ -62,20 +55,3 @@ Tipped arrows work the same way: all share the minecraft:arrow id, so their
 effect is read from the localization key and each effect (Arrow of Swiftness,
 Arrow of Poison, etc.) counts once regardless of amplifier or duration. A plain
 arrow is its own single entry.
-
-## The fixed master list
-
-`item_unlocker_bp/scripts/collectibles.js` holds the fixed set of collectible
-keys (the denominator, currently 1457). It is generated from the source item
-list; Java-exclusive and unobtainable entries are dropped. To regenerate it:
-
-```
-node claude_tools/build_collectibles.js
-```
-
-## Storage
-
-Per-player and global progress are stored in dynamic properties. To stay under
-the 32,767-byte-per-property limit, keys are sharded across 16 properties
-(`iuc:pc0`..`iuc:pc15` per player, `iuc:gc0`..`iuc:gc15` global). In-memory
-caches keep the acquisition hot path off native reads.
