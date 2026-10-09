@@ -55,3 +55,15 @@ Tipped arrows work the same way: all share the minecraft:arrow id, so their
 effect is read from the localization key and each effect (Arrow of Swiftness,
 Arrow of Poison, etc.) counts once regardless of amplifier or duration. A plain
 arrow is its own single entry.
+
+## License
+
+Copyright (c) 2026 PrimeStrat. All rights reserved. See [LICENSE](LICENSE).
+
+Videos, streams, and monetized content are welcome. You can run it on your
+server or put it in a modpack, as long as you credit PrimeStrat and link back
+here. You cannot sell it, reuse the code, or re-upload your own version.
+
+## Thanks
+
+Thank you to [EvidentP](https://www.youtube.com/@EvidentP) for the support.
