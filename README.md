@@ -9,8 +9,6 @@ fixed master list.
 
 ## Commands
 
-All commands are usable by any player.
-
 - `/iuc:progress` - prints your collection progress (global total when the
   Global Counter is on).
 - `/iuc:collection [filter]` - opens a paged form listing collected `[X]` and
